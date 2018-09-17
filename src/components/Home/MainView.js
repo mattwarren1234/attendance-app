@@ -31,6 +31,7 @@ const GlobalFeedTab = props => {
   };
   return (
     <li className="nav-item">
+    <h1>this thing loaded!</h1>
       <a
         href=""
         className={ props.tab === 'all' ? 'nav-link active' : 'nav-link' }

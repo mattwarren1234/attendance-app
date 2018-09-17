@@ -12,6 +12,7 @@ import {
 } from '../constants/actionTypes';
 
 const mapStateToProps = state => {
+  console.log('state.editor is ', state.editor);
   return {
     ...state.editor
   }
