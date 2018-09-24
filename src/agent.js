@@ -7,6 +7,7 @@ const superagent = superagentPromise(_superagent, global.Promise);
 // const API_ROOT = "http://localhost:1323/api"
 // const API_ROOT = "http://localhost:8080/api"
 const API_ROOT = 'https://conduit.productionready.io/api';
+const MEMBERS_API_ROOT = "http://localhost:1323/";
 
 const encode = encodeURIComponent;
 const responseBody = res => res.body;
@@ -16,6 +17,23 @@ const tokenPlugin = req => {
   if (token) {
     req.set('authorization', `Token ${token}`);
   }
+}
+
+// Very hacky - but we use the main api for auth stuff & our local api for attendance
+const memberRequests = {
+  del: url =>
+    superagent.del(`${MEMBERS_API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
+  get: url =>
+    superagent.get(`${MEMBERS_API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
+  put: (url, body) =>
+    superagent.put(`${MEMBERS_API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
+  post: (url, body) =>
+    superagent.post(`${MEMBERS_API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody)
+}
+
+const Members = {
+  getAll: () =>
+   memberRequests.get('/members')
 }
 
 const requests = {
@@ -88,6 +106,8 @@ const Profile = {
   unfollow: username =>
     requests.del(`/profiles/${username}/follow`)
 };
+
+
 
 export default {
   Articles,
